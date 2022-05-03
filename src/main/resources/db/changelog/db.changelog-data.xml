@@ -1,0 +1,99 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+  <changeSet id="202204300000" author="Esteban Cabezudo">
+
+    <createTable tableName="states">
+      <column name="id" type="bigint">
+        <constraints primaryKey="true" primaryKeyName="state_id_pk"/>
+      </column>
+      <column name="code" type="char(2)" >
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addAutoIncrement tableName="states" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+    <createIndex indexName="code_uk" schemaName="public" tableName="states" unique="true">
+      <column descending="true" name="code"/>
+    </createIndex>
+
+    <createTable tableName="city">
+      <column name="id" type="bigint">
+        <constraints primaryKey="true" primaryKeyName="city_id_pk"/>
+      </column>
+      <column name="name" type="varchar(40)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addAutoIncrement tableName="city" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+
+    <createTable tableName="company">
+      <column name="id" type="bigint">
+        <constraints primaryKey="true" primaryKeyName="company_id_pk"/>
+      </column>
+      <column name="name" type="varchar(40)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="address" type="varchar(60)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="state_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="city_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="zip_code" type="int">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addAutoIncrement tableName="company" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+    <addForeignKeyConstraint baseTableName="company" baseColumnNames="city_id" constraintName="company_city_fk" referencedTableName="city" referencedColumnNames="id"/>
+    <addForeignKeyConstraint baseTableName="company" baseColumnNames="state_id" constraintName="company_state_fk" referencedTableName="states" referencedColumnNames="id"/>
+
+    <createTable tableName="department">
+      <column name="id" type="bigint">
+        <constraints primaryKey="true" primaryKeyName="department_id_pk"/>
+      </column>
+      <column name="name" type="varchar(40)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addAutoIncrement tableName="department" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+
+    <createTable tableName="person">
+      <column name="id" type="bigint">
+        <constraints primaryKey="true" primaryKeyName="person_id_pk"/>
+      </column>
+      <column name="first_name" type="varchar(40)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_name" type="varchar(40)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="company_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="phone1" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="phone2" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="email" type="varchar(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="department_id" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <addAutoIncrement tableName="person" columnName="id" columnDataType="bigint" startWith="1" incrementBy="1"/>
+    <addForeignKeyConstraint baseTableName="person" baseColumnNames="company_id" constraintName="person_company_fk" referencedTableName="company" referencedColumnNames="id"/>
+    <addForeignKeyConstraint baseTableName="person" baseColumnNames="department_id" constraintName="person_department_fk" referencedTableName="department" referencedColumnNames="id"/>
+
+    <createSequence sequenceName="hibernate_sequence" incrementBy="1" startValue="1"/>
+  </changeSet>
+</databaseChangeLog>
