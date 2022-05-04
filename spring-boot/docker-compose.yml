@@ -13,15 +13,20 @@ services:
       - postgres
   centos:
     image: centos
+    volumes:
+      - appData:/home/data
+    tty: true
     networks:
       - postgres
   app:
     image: xal-app
     ports:
-      - "8081:8081"
+      - "8081:8080"
     networks:
       - postgres
 networks:
   postgres:
     driver: bridge
     name: postgres
+volumes:
+  appData:

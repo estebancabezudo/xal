@@ -1,12 +1,9 @@
-FROM centos:7
-
-RUN yum install -y java-11
-
+FROM alpine/git as clone
 WORKDIR /app
+RUN git clone https://github.com/estebancabezudo/xal.git
 
-COPY xal-v1.jar /app/
-COPY application.properties /app/
+FROM maven:3.5-jdk-8-alpine as build
+WORKDIR /app
+COPY --from=clone /app/xal /app
+RUN mvn -X install
 
-COPY sample.csv /app
-
-ENTRYPOINT ["java", "-jar","/app/xal-v1.jar"]
